@@ -9,7 +9,7 @@ $ sudo apt install libmariadb3 libmariadb-dev
 ## Install
 ```sh
 $ pip3 install virtualenv
-$ python3.9 -m venv env
+$ python3 -m venv env
 ```
 
 ## Run
