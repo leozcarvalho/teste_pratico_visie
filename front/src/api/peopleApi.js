@@ -24,8 +24,8 @@ peopleApi.getPeople = async (filter) => {
             }
         })
         return response
-    } catch(error) {
-        return error.response
+    } catch {
+        return null
     }
 }
 

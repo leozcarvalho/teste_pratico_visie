@@ -75,6 +75,9 @@
             </ul>
           </nav>
         </div>
+        <div class="text-center my-4" v-if="people.length == 0 && !loading">
+          <h3>Sem registros</h3>
+        </div>
         <div v-if="loading" class="d-flex justify-content-center py-5">
           <div class="spinner-border" role="status" style="width: 6rem; height: 6rem;">
             <span class="visually-hidden">Loading...</span>
@@ -127,8 +130,10 @@ export default {
       this.loading = true
       this.people = []
       const response = await peopleApi.getPeople(this.filter)
-      this.people = response.data.people
-      this.totalPeople = response.data.people_count
+      if (response) {
+        this.people = response?.data.people
+        this.totalPeople = response?.data.people_count
+      }
       this.loading = false
     },
     changePage(page) {
