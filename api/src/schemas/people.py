@@ -1,7 +1,7 @@
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 class PersonIn(BaseModel):
     nome: str
@@ -13,7 +13,6 @@ class PersonIn(BaseModel):
 
     class Config:
         orm_mode = True
-
 
 class Person(PersonIn):
     id_pessoa: int

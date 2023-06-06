@@ -8,7 +8,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Deseja realmente excluir esse usuário?
+            Deseja realmente excluir esse registro?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -26,22 +26,23 @@
                 <h4 class="mb-3">Pessoas</h4>
               </div>
               <div class="col-auto">
-                <select class="form-select" v-model="filter.limit" @input="refresh">
+                <select class="form-select" v-model="filter.limit" @change="refresh">
                   <option v-for="(page, index) in perPageOptions" :key="index">{{ page }}</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="col-auto order-last">
-            <button type="button" class="btn btn-success" @click="$router.push({ name: 'new-person' })">Nova Pessoa</button>
+            <button type="button" class="btn btn-success" @click="$router.push({ name: 'new-person' })">Nova
+              Pessoa</button>
           </div>
         </div>
         <div v-if="people.length > 0">
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">Data de admissão</th>
+                <th class="sortable" scope="col" @click="sort('nome')">Nome</th>
+                <th class="sortable" scope="col" @click="sort('data_admissao')">Data de admissão</th>
                 <th class="text-center" scope="col">Ações</th>
               </tr>
             </thead>
@@ -50,7 +51,8 @@
                 <td>{{ item.nome | shortName }}</td>
                 <td>{{ item.data_admissao | parseDataToBr }}</td>
                 <td class="d-flex justify-content-center">
-                  <button type="button" class="btn btn-primary">Ver Mais</button>
+                  <button type="button" class="btn btn-primary"
+                    @click="$router.push({ name: 'person-view', params: { id: item.id_pessoa } })">Ver Mais</button>
                   <button type="button" class="btn btn-warning mx-2"
                     @click="$router.push({ name: 'person-edit', params: { id: item.id_pessoa } })">Editar</button>
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
@@ -86,10 +88,13 @@
 <script>
 import { parseDataToBr } from "./../helpers/date"
 import { peopleApi } from "../api/peopleApi"
+import Alert from "../components/Alert.vue"
 
 export default {
 
   name: 'IndexPage',
+
+  mixins: [Alert],
 
   filters: {
     shortName(name) {
@@ -131,9 +136,14 @@ export default {
       this.filter.skip = (page - 1) * this.filter.limit;
       this.refresh()
     },
+    sort(key) {
+      this.filter.sortBy = key
+      this.filter.orderDesc = !this.filter.orderDesc
+      this.refresh()
+    },
     async deletePerson() {
       const response = await peopleApi.deletePerson(this.currentIndex)
-      //this.$refs.toast.showAlert(response.data.status, response.data.message)
+      this.showToast(response.data.message, response.data.status)
       if (response.data.status === 'success') this.refresh()
     },
   },
@@ -145,3 +155,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.sortable {
+  cursor: pointer;
+}
+</style>

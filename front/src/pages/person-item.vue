@@ -6,7 +6,7 @@
           <div class="me-auto p-2 bd-highlight">
             <div class="row">
               <div class="col-auto">
-                <h4 class="mb-3">{{ personId ? 'Editando' : 'Novo cadastro' }}</h4>
+                <h4 class="mb-3">{{ personId ? 'Editar Registro' : 'Novo Registro' }}</h4>
               </div>
             </div>
           </div>
@@ -49,21 +49,27 @@
               <label>Data de nascimento</label>
               <input v-model="person.dataNascimento" v-mask="'##/##/####'" class="form-control"
                 :class="{ 'is-invalid': $v.person.dataNascimento.$error }" />
-              <div class="invalid-feedback">
+              <div v-if="!$v.person.dataNascimento.required" class="invalid-feedback">
                 Data de nascimento é obrigatória
+              </div>
+              <div v-else-if="!$v.person.dataNascimento.validateDate" class="invalid-feedback">
+                Formato de data inválido
               </div>
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Data de admissão</label>
               <input v-model="person.dataAdmissao" v-mask="'##/##/####'" class="form-control"
                 :class="{ 'is-invalid': $v.person.dataAdmissao.$error }" />
-              <div class="invalid-feedback">
+              <div v-if="!$v.person.dataAdmissao.required" class="invalid-feedback">
                 Data de admissão é obrigatória
+              </div>
+              <div v-else-if="!$v.person.dataAdmissao.validateDate" class="invalid-feedback">
+                Formato de data inválido
               </div>
             </div>
           </div>
           <div class="text-end">
-            <button type="button" class="btn btn-success" @click="submit">{{ personId ? 'Editar' : 'Salvar' }}</button>
+            <button type="button" class="btn btn-success" @click="submit">Salvar</button>
             <button type="button" class="btn btn-danger ms-3"
               @click="$router.push({ name: 'person-list' })">Cancelar</button>
           </div>
@@ -76,11 +82,15 @@
 <script>
 import { peopleApi } from "../api/peopleApi"
 import { required } from 'vuelidate/lib/validators'
-import { parseDataToBr, parseToISO } from "./../helpers/date"
+import { parseDataToBr, parseToISO, validateDate } from "./../helpers/date"
+import Alert from "../components/Alert.vue"
 
 export default {
 
   name: 'PersonForm',
+
+  mixins: [Alert],
+
 
   validations: {
     person: {
@@ -94,10 +104,10 @@ export default {
         required,
       },
       dataNascimento: {
-        required,
+        required, validateDate
       },
       dataAdmissao: {
-        required,
+        required, validateDate
       },
     }
   },
@@ -156,6 +166,7 @@ export default {
       }
     },
     backToPersonList(response) {
+      this.showToast(response.data.message, response.data.status)
       if (response.data.status === 'success') this.$router.push({ name: 'person-list' })
     },
   },

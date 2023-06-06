@@ -19,6 +19,11 @@ const routes = [
     name: 'new-person',
     component: () => import('../pages/person-item.vue')
   },
+  {
+    path: '/person-view/:id',
+    name: 'person-view',
+    component: () => import('../pages/person-view.vue')
+  },
 ]
 
 const router = new VueRouter({

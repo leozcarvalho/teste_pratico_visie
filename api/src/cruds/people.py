@@ -1,4 +1,6 @@
 from sqlalchemy.orm.session import Session
+from sqlalchemy import desc, asc
+
 from src.models import people as person_model
 from src.schemas import people as people_schema
 
@@ -12,7 +14,10 @@ def get_people(db: Session, **args):
 
     db_query = db_query.filter(*conditions)
 
-    return db_query.order_by(args['sort_by']).offset(args['skip']).limit(args['limit']).all(), db_query.count()
+    order = asc
+    if args['order_desc']:  order = desc
+
+    return db_query.order_by(order(args['sort_by'])).offset(args['skip']).limit(args['limit']).all(), db_query.count()
 
 def add_person(db: Session, person: people_schema.PersonIn):
     db_person = person_model.Person(**person.dict())
@@ -26,6 +31,6 @@ def update_person(db: Session, person_id: int, person: people_schema.PersonIn):
 
     db.commit()
 
-def delete_person(db: Session, db_people):
-    db.delete(db_people)
+def delete_person(db: Session, db_person):
+    db.delete(db_person)
     db.commit()

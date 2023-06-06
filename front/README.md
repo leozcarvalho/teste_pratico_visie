@@ -1,24 +1,13 @@
 # front
 
-## Project setup
+## Project install and run
 ```
-npm install
+./run.sh restart
+
 ```
 
-### Compiles and hot-reloads for development
+## Project run
 ```
-npm run serve
-```
+./run.sh
 
-### Compiles and minifies for production
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

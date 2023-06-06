@@ -21,7 +21,7 @@ def get_people(id: Optional[int] = None, skip: Optional[int] = None,
 def save_person(person: people_schema.PersonIn = Body(..., embed=True),
     session: Session = Depends(get_db)):
     db_person = people_crud.add_person(db=session, person=person)
-    return general_schemas.ResponseMessage(status='success', message="Nova pessoa cadastrada com sucesso")
+    return general_schemas.ResponseMessage(status='success', message="Registro salvo com sucesso")
 
 @people_routes.put("/{person_id}")
 def update_person(person_id: int, person: people_schema.PersonIn = Body(..., embed=True),
@@ -41,6 +41,6 @@ def delete_person(person_id: int, session: Session = Depends(get_db)):
     if not db_person:
         raise HTTPException(status_code=404, detail="Pessoa não cadastrada")
    
-    people_crud.delete_people(db=session, db_person=db_person)
+    people_crud.delete_person(db=session, db_person=db_person)
 
-    return general_schemas.ResponseMessage(status='success', message=f"Pessoa {person_id} deletada com sucesso")
+    return general_schemas.ResponseMessage(status='success', message=f"Registro {person_id} deletado com sucesso")
