@@ -51,19 +51,21 @@ peopleApi.deletePerson = async (personId) => {
 }
 
 peopleApi.savePerson = async (person) => {
-    const payload = {
-        nome: person.name,
-        rg: person.rg,
-        cpf: person.cpf,
-        data_nascimento: person.name,
-        data_admissao: person.name,
-        funcao: person.function,
-    }
     try {
-        const response = await api.post(`/people`, { person: payload })
+        const response = await api.post(`/people`, { person: person })
         return response
     } catch(error) {
         return error.response
     }
 }
+
+peopleApi.updatePerson = async (personId, person) => {
+    try {
+        const response = await api.put(`/people/${personId}`, { person: person })
+        return response
+    } catch(error) {
+        return error.response
+    }
+}
+
 export { peopleApi }

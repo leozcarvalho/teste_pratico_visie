@@ -19,9 +19,9 @@ def add_person(db: Session, person: people_schema.PersonIn):
     db.add(db_person)
     db.commit()
 
-def update_person(db: Session, people_id: int, person: people_schema.PersonIn):
+def update_person(db: Session, person_id: int, person: people_schema.PersonIn):
     db.query(person_model.Person)\
-        .filter(person_model.Person.id_pessoa == people_id)\
+        .filter(person_model.Person.id_pessoa == person_id)\
         .update(person.dict())
 
     db.commit()

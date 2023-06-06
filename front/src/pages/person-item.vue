@@ -76,7 +76,7 @@
 <script>
 import { peopleApi } from "../api/peopleApi"
 import { required } from 'vuelidate/lib/validators'
-import { parseDataToBr } from "./../helpers/date"
+import { parseDataToBr, parseToISO } from "./../helpers/date"
 
 export default {
 
@@ -124,6 +124,7 @@ export default {
       this.person = {
         name: person.nome,
         rg: person.rg,
+        function: person.funcao,
         cpf: person.cpf,
         dataNascimento: parseDataToBr(person.data_nascimento),
         dataAdmissao: parseDataToBr(person.data_admissao),
@@ -133,13 +134,26 @@ export default {
     async submit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        if (this.personId) return
-        else this.savePerson()
+        this.loading = true
+        const payload = {
+          nome: this.person.name,
+          rg: this.person.rg,
+          cpf: this.person.cpf,
+          data_nascimento: parseToISO(this.person.dataNascimento),
+          data_admissao: parseToISO(this.person.dataAdmissao),
+          funcao: this.person.function,
+        }
+        if (this.personId) {
+          const response = await peopleApi.updatePerson(this.personId, payload)
+          this.loading = false
+          this.backToPersonList(response)
+        }
+        else {
+          const response = await peopleApi.savePerson(payload)
+          this.loading = false
+          this.backToPersonList(response)
+        }
       }
-    },
-    async savePerson() {
-      const response = await peopleApi.savePerson(this.person)
-      this.backToPersonList(response)
     },
     backToPersonList(response) {
       if (response.data.status === 'success') this.$router.push({ name: 'person-list' })

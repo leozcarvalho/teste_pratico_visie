@@ -31,7 +31,7 @@ def update_person(person_id: int, person: people_schema.PersonIn = Body(..., emb
     if not db_person:
         raise HTTPException(status_code=404, detail="Pessoa não cadastrada")
     
-    people_crud.update_people(db=session, person_id=person_id, person=person)
+    people_crud.update_person(db=session, person_id=person_id, person=person)
     return general_schemas.ResponseMessage(status='success', message="Dados atualizados com sucesso")
 
 @people_routes.delete("/{person_id}")
