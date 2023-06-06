@@ -1,13 +1,13 @@
 # front
 
 ## Project install and run
-```
-./run.sh restart
+```sh
+$ ./run.sh restart
 
 ```
 
 ## Project run
-```
-./run.sh
+```sh
+$ ./run.sh
 
 ```
