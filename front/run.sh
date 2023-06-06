@@ -1,7 +1,4 @@
 #!/bin/bash
 
-if [ "$1" = "restart" ]; then
-    npm install
-fi
-
+npm install
 npm run serve
